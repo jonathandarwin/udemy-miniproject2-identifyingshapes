@@ -10,11 +10,14 @@ cv2.waitKey(0)
 # apply threshold
 ret, thresh = cv2.threshold(gray, 127, 255, 1)
 
+# contours : bagus untuk detect shape
 # extract contours
 # cv2.findContours (return 3 parameter in Python 2, return 2 parameter in Python 3)
+# find Contours untuk detect boundary
 _, contours, hierarchy = cv2.findContours(thresh.copy(), cv2.RETR_LIST, cv2.CHAIN_APPROX_NONE)
 
 for contour in contours:
+        # approxPolyDP mengembalikan nilai sudut dari shape yang ada
         approx = cv2.approxPolyDP(contour, 0.01 * cv2.arcLength(contour, True), True)
 
         if(len(approx) == 3):
@@ -32,11 +35,11 @@ for contour in contours:
                 elif (len(approx) >= 15):
                         shapeName = 'Circle'
 
-        # draw the shape and the color
+        # drawContours : menggambar contour dengan warnanya
         cv2.drawContours(image, [contour], 0, (0, 255, 255) , -1)
         M = cv2.moments(contour)
 
-        # get the center point
+        # mendapatkan center point dari shape
         x = int(M['m10'] / M['m00'])
         y = int(M['m01'] / M['m00'])
         cv2.putText(image, shapeName, (x-50, y), cv2.FONT_HERSHEY_SIMPLEX, 1, (255,0,0), 1)                
